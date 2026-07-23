@@ -22,16 +22,20 @@ inject_theme()
 if "profile_country" not in st.session_state:
     st.session_state.profile_country = "USA"
 
-# Tab-style country picker
-tab_cols = st.columns(len(COUNTRY_ORDER))
-for i, iso in enumerate(COUNTRY_ORDER):
-    with tab_cols[i]:
-        is_active = st.session_state.profile_country == iso
-        btn_type = "primary" if is_active else "secondary"
-        if st.button(COUNTRY_META[iso]["name"], key=f"profile_tab_{iso}",
-                     use_container_width=True, type=btn_type):
-            st.session_state.profile_country = iso
-            st.rerun()
+# Tab-style country picker — a wrapping grid (not one row of 15 too-narrow columns,
+# which squeezed "United States" etc. down to one letter per line)
+PILLS_PER_ROW = 5
+for row_start in range(0, len(COUNTRY_ORDER), PILLS_PER_ROW):
+    row_isos = COUNTRY_ORDER[row_start:row_start + PILLS_PER_ROW]
+    tab_cols = st.columns(PILLS_PER_ROW)
+    for i, iso in enumerate(row_isos):
+        with tab_cols[i]:
+            is_active = st.session_state.profile_country == iso
+            btn_type = "primary" if is_active else "secondary"
+            if st.button(COUNTRY_META[iso]["name"], key=f"profile_tab_{iso}",
+                         use_container_width=True, type=btn_type):
+                st.session_state.profile_country = iso
+                st.rerun()
 
 iso = st.session_state.profile_country
 meta = COUNTRY_META[iso]
