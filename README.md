@@ -1,5 +1,3 @@
-
-
 # SMAC — Subnational Methane 
 
 A Streamlit prototype that translates Climate TRACE methane data into structured
