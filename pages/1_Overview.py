@@ -23,7 +23,7 @@ with col1:
     logo_col, name_col = st.columns(
         [0.12, 0.88],
         gap="small",
-        vertical_alignment="center",
+        vertical_alignment="left",
     )
 
     with logo_col:
@@ -54,7 +54,7 @@ with col1:
         'margin:-4px 0 18px;flex-wrap:wrap;">'
         '<span class="smac-pill">● Prototype</span>'
         '<span class="smac-meta" style="font-size:12px;">'
-        'Climate TRACE · 2021–2024'
+        '2021–2024'
         '</span>'
         '</div>',
         unsafe_allow_html=True,
