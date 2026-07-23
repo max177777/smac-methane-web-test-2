@@ -5,11 +5,13 @@ policy guidance for subnational governments.
 
 - **15 countries** · **287 subnational units** · **48+ months**, refreshed quarterly
 - **Five pages**: Overview, Data & Methods, SMAC, Insights, Chat
-- **Dual-mode chat**: Methane Specialist + General Assistant, with an A–Z
-  jurisdiction picker so you don't need to know the country first
-- **Data refresh**: `.github/workflows/refresh-data.yml` pulls the latest
-  Climate TRACE country packages on a quarterly cron and redeploys
-  automatically — see `scripts/refresh_climatetrace_data.py` for the pipeline
-  and its one-time setup checklist.
 
-Source: https://github.com/max177777/smac-methane-app
+Helpful Tools:
+
+https://smac-members-inventory-dashboard.streamlit.app/
+
+https://observablehq.com/@max-no-sekai/smac-methane-emissions-sunburst-tool
+
+https://smac-methane-web-test.onrender.com/
+
+https://smacmethane-inventory-tool.org/
