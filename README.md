@@ -1,16 +1,6 @@
----
-title: SMAC Methane Atlas
-emoji: 🌫️
-colorFrom: green
-colorTo: yellow
-sdk: streamlit
-sdk_version: 1.50.0
-app_file: app.py
-pinned: false
-license: mit
----
 
-# SMAC — Subnational Methane Atlas & Chat
+
+# SMAC — Subnational Methane 
 
 A Streamlit prototype that translates Climate TRACE methane data into structured
 policy guidance for subnational governments.
