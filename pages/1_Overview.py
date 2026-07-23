@@ -23,7 +23,7 @@ with col1:
     logo_col, name_col = st.columns(
         [0.12, 0.88],
         gap="small",
-        vertical_alignment="left",
+        vertical_alignment="center",
     )
 
     with logo_col:
