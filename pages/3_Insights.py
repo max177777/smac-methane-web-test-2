@@ -10,7 +10,7 @@ import streamlit as st
 from utils.theme import inject_theme, eyebrow
 from utils.data_loader import (
     COUNTRY_META, COUNTRY_ORDER, country_monthly,
-    location_yearly_ranking, country_yearly, location_monthly, list_locations,
+    location_yearly_ranking, country_yearly, location_yearly, location_monthly, list_locations,
     location_sectors, has_sector_data,
     fmt_int, fmt_mt, pct_change,
 )
@@ -39,15 +39,37 @@ with col_h2:
         format_func=lambda x: f"{COUNTRY_META[x]['name']} ({x})",
         key="dash_country_select",
     )
-    st.session_state.dash_country = selected
+    if selected != st.session_state.dash_country:
+        st.session_state.dash_country = selected
+        st.session_state.dash_location = "__all__"
+
+    if "dash_location" not in st.session_state:
+        st.session_state.dash_location = "__all__"
+
+    _loc_options = ["__all__"] + list_locations(st.session_state.dash_country)
+    _loc_meta = COUNTRY_META[st.session_state.dash_country]
+    loc_selected = st.selectbox(
+        "Subnational unit",
+        options=_loc_options,
+        index=_loc_options.index(st.session_state.dash_location)
+              if st.session_state.dash_location in _loc_options else 0,
+        format_func=lambda x: f"All {_loc_meta['subunit_type']}s (national aggregate)" if x == "__all__" else x,
+        key="dash_location_select",
+    )
+    st.session_state.dash_location = loc_selected
 
 iso = st.session_state.dash_country
 meta = COUNTRY_META[iso]
+loc = st.session_state.dash_location
+has_loc = loc != "__all__"
 
 st.markdown("<br>", unsafe_allow_html=True)
 
 # ============== KPIs ==============
-yearly = country_yearly(iso)
+if has_loc:
+    yearly = location_yearly(iso, loc)
+else:
+    yearly = country_yearly(iso)
 y23 = float(yearly[yearly["year"] == 2023]["ch4_tonnes"].iloc[0]) if 2023 in yearly["year"].values else 0
 y24 = float(yearly[yearly["year"] == 2024]["ch4_tonnes"].iloc[0]) if 2024 in yearly["year"].values else 0
 yoy = pct_change(y24, y23)
@@ -70,14 +92,24 @@ top1_share = top1["share"]
 
 kpi_cols = st.columns(4)
 with kpi_cols[0]:
-    st.metric("2024 Total CH₄", f"{fmt_mt(y24)} Mt",
+    st.metric(f"2024 Total CH₄{' · ' + loc if has_loc else ''}", f"{fmt_mt(y24)} Mt",
               f"{yoy:+.2f}% YoY", delta_color="inverse" if yoy > 0 else "normal")
 with kpi_cols[1]:
     st.metric("CO₂e · GWP100", f"{fmt_mt(y24 * GWP100)} Mt", f"×{GWP100} IPCC AR6", delta_color="off")
 with kpi_cols[2]:
     st.metric("CO₂e · GWP20", f"{fmt_mt(y24 * GWP20)} Mt", f"×{GWP20} IPCC AR6", delta_color="off")
 with kpi_cols[3]:
-    st.metric("Top subunit share", f"{top1_share:.1f}%", str(top1["location"]), delta_color="off")
+    if has_loc:
+        loc_row = ranking[ranking["location"] == loc]
+        if len(loc_row):
+            rank_pos = ranking.index[ranking["location"] == loc][0] + 1
+            loc_share = float(loc_row["share"].iloc[0])
+            st.metric("Share of national total", f"{loc_share:.1f}%",
+                      f"#{rank_pos} of {len(ranking)} {meta['subunit_type']}s", delta_color="off")
+        else:
+            st.metric("Share of national total", "—", "no 2024 data for this unit", delta_color="off")
+    else:
+        st.metric("Top subunit share", f"{top1_share:.1f}%", str(top1["location"]), delta_color="off")
 
 st.markdown("<br>", unsafe_allow_html=True)
 
@@ -85,11 +117,14 @@ st.markdown("<br>", unsafe_allow_html=True)
 col_t, col_g = st.columns([1.3, 1], gap="large")
 
 with col_t:
-    eyebrow("National time series")
-    st.markdown("<h3>Monthly CH₄ · tonnes · all subnational units</h3>", unsafe_allow_html=True)
+    eyebrow(f"{loc + ' · ' if has_loc else 'National '}time series" if has_loc else "National time series")
+    st.markdown(
+        f"<h3>Monthly CH₄ · tonnes · {loc if has_loc else 'all subnational units'}</h3>",
+        unsafe_allow_html=True,
+    )
     period = st.radio("Period", options=["All years", "2023–2024"],
-                      horizontal=True, key=f"period_{iso}", label_visibility="collapsed")
-    monthly = country_monthly(iso)
+                      horizontal=True, key=f"period_{iso}_{loc}", label_visibility="collapsed")
+    monthly = location_monthly(iso, loc) if has_loc else country_monthly(iso)
     if period == "2023–2024":
         monthly = monthly[monthly["year"] >= 2023]
     st.plotly_chart(time_series_plotly(monthly, height=320), use_container_width=True,
