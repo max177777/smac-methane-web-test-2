@@ -92,11 +92,14 @@ hr { border-color: var(--line-soft) !important; }
   font-size: 15px !important;
   letter-spacing: 0 !important;
   text-transform: none !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
   border: none !important;
   background: var(--mint) !important;
   color: var(--ink) !important;
   border-radius: 999px !important;
-  padding: 10px 26px !important;
+  padding: 10px 22px !important;
   font-weight: 700 !important;
   transition: background 0.2s ease, transform 0.12s ease, box-shadow 0.2s ease;
 }
