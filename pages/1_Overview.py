@@ -19,20 +19,47 @@ inject_theme()
 col1, col2 = st.columns([1.4, 1], gap="large")
 
 with col1:
-    dot_logo(36)
+    # Logo + SMAC wordmark
+    logo_col, name_col = st.columns(
+        [0.12, 0.88],
+        gap="small",
+        vertical_alignment="center",
+    )
+
+    with logo_col:
+        dot_logo(36)
+        
+    with name_col:
+        st.markdown(
+            """
+            <div style="
+                color: #35A873;
+                font-family: Inter, sans-serif;
+                font-size: 38px;
+                font-weight: 800;
+                line-height: 1;
+                letter-spacing: 0.08em;
+                margin-left: -4px;
+            ">
+                SMAC
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
     eyebrow("AI Methane Decision Assistant · V1")
+
     st.markdown(
-        '<div style="display:flex;align-items:center;gap:10px;margin:-4px 0 18px;flex-wrap:wrap;">'
+        '<div style="display:flex;align-items:center;gap:10px;'
+        'margin:-4px 0 18px;flex-wrap:wrap;">'
         '<span class="smac-pill">● Prototype</span>'
-        '<span class="smac-meta" style="font-size:12px;">Climate TRACE · 2021–2024</span>'
+        '<span class="smac-meta" style="font-size:12px;">'
+        'Climate TRACE · 2021–2024'
+        '</span>'
         '</div>',
         unsafe_allow_html=True,
     )
-    st.markdown(
-        "<h1 style='margin-bottom:0;'>Translating <em>methane data</em> into "
-        "policy actions.</h1>",
-        unsafe_allow_html=True,
-    )
+    
     st.markdown(
         '<p style="font-family:Inter,sans-serif;font-size:18px;line-height:1.6;'
         'color:var(--ink-soft);max-width:520px;margin-top:24px;font-weight:400;">'
