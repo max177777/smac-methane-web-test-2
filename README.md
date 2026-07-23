@@ -3,7 +3,7 @@
 A Streamlit prototype that translates Climate TRACE methane data into structured
 policy guidance for subnational governments.
 
-- **11 countries** · **287 subnational units** · **48+ months**, refreshed quarterly
+- **15 countries** · **287 subnational units** · **48+ months**, refreshed quarterly
 - **Five pages**: Overview, Data & Methods, SMAC (Atlas), Insights, Chat
 - **Dual-mode chat**: Methane Specialist + General Assistant, with an A–Z
   jurisdiction picker so you don't need to know the country first
