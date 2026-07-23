@@ -175,6 +175,18 @@ def country_monthly(iso: str) -> pd.DataFrame:
 
 
 @st.cache_data(show_spinner=False)
+def location_yearly(iso: str, location: str) -> pd.DataFrame:
+    """Yearly totals for a single subnational unit."""
+    df = load_raw()
+    sub = df[(df["iso3_country"] == iso) & (df["location"] == location)]
+    return (
+        sub.groupby("year", as_index=False)["total_emission"]
+        .sum()
+        .rename(columns={"total_emission": "ch4_tonnes"})
+    )
+
+
+@st.cache_data(show_spinner=False)
 def location_monthly(iso: str, location: str) -> pd.DataFrame:
     """Monthly series for a single subnational unit."""
     df = load_raw()
